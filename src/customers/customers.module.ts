@@ -1,3 +1,4 @@
+import { ValidateCustomerAccountMiddleware } from './middleware/validate-customer-account.middleware';
 import { ValidateCustomerMiddleware } from './middleware/validate-customer.middleware';
 import {
   MiddlewareConsumer,
@@ -13,10 +14,11 @@ import { CustomersService } from './services/customers/customers.service';
   providers: [CustomersService],
 })
 // TODO: https://docs.nestjs.com/middleware
+// middleware run sequentially,after calling next() the next middileware will run
 export class CustomersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(ValidateCustomerMiddleware)
+      .apply(ValidateCustomerMiddleware, ValidateCustomerAccountMiddleware)
       .exclude({
         path: 'api/customers',
         method: RequestMethod.GET,
